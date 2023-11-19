@@ -2,42 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerModel : MonoBehaviour
+public class PlayerModel
 {
-    [SerializeField] private Vector2 mousePosition;
-    [SerializeField] RaycastHit positionToMove;
-    [SerializeField] private float speed;
-    //[SerializeField] GameObject mousePositionObject;
-    [SerializeField] Camera SceneCamera;
-    private float offset = 0f;
-    private LayerMask destructible;
-    private LayerMask directionDecision;
-    public bool playable = false; 
+    internal List<Vector3> jumpPath = new List<Vector3>();
+    public Vector3 mousePosInWorld;
+    public LayerMask destructibleLayers;
+    public LayerMask directionHit;
+    public bool isRunnable = false;
+    public bool isJumpable = true;
+    public Coroutine jumping;
+    public float speed;
+    public float jumpSpeed;
+    public float health;
+    public Weapons currWeapon;
+    public PlayerState currState;
+    public GameObject player;
+    public GameObject playerArmature;
+    public PlayerAnimationStates currAnimationState = PlayerAnimationStates.idle;
+    
 
-    MeshGenerator meshgenerator;
-    private QuadraticCurve qCurve;
-    private BoatMock boat;
-
-    Coroutine enemyDetection;
-    Coroutine jumping;
-
-    public PlayerModel(SO_Player soPlayer)
+    public PlayerModel(SO_Player playerDetails, PlayerView playerView)
     {
-        SoPlayer = soPlayer;
-
+        speed = playerDetails.playerSpeed;
+        jumpSpeed = playerDetails.jumpSpeed;
+        health = playerDetails.playerHealth;
+        currWeapon = playerDetails.defaultWeapon;
+        currState = playerDetails.defaultState;
+        player = playerView.gameObject;
+        playerArmature = player.transform.GetChild(0).gameObject;
+        directionHit = playerDetails.pointerDetetionLayer;
     }
 
-    public SO_Player SoPlayer { get; }
-
-    // Start is called before the first frame update
-    void Start()
+    public void destructModel()
     {
-        
+        jumping = null;
+        player = null;
+        playerArmature = null;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -2,81 +2,104 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class WorldService : MonoBehaviour
+public class WorldService : GenericSingleton<WorldService>
 {
-    [SerializeField] GameObject module;
-    [SerializeField] GameObject player;
-    [SerializeField] bool builded = false;
-    [SerializeField] int squareArea;
-    // Start is called before the first frame update
+    private LandGenerator landGenerator = new LandGenerator();
+    private HideOutGenerator hideOutGenerator = new HideOutGenerator();
+    [field : SerializeField] Transform levelRootTransform { get; set; }
+    [SerializeField] GameObject currentLevelLand;
+    [SerializeField] List<GameObject> hideOutModels;
+    [SerializeField] int levelNum = 0;
+    [SerializeField] int islandRadius = 0;
+    public int islandTotalRadius;
+    [SerializeField] float islandDepth;
+    [SerializeField] Material islandMaterial;
+    
+    public Vector3 playerEntry { get; private set; }
+    public Vector3 playerExit { get; private set; }
 
-    Coroutine buildWorld;
-    void Start()
+    //weapon spear test
+    private CurveGenerator curveGenerator = new CurveGenerator();
+    [SerializeField] Vector3 targetEnemy;
+    [SerializeField] Vector3 accesibleEnemy;
+    [SerializeField] List<Vector3> roofTops;
+    [SerializeField] Transform spearWeapon;
+    [SerializeField] GameObject pathElement;
+
+
+    protected override void Awake()
     {
-        buildWorld = StartCoroutine(startLevelBuilding());
+        base.Awake();
+        islandTotalRadius = islandRadius + levelNum;
+    }
+    private void OnEnable()
+    {
+        landGenerator.setEntryExit += getEntryExit;
+    }
+    public void createCurrLevel(Vector3 position)
+    {
+        GameObject land = landGenerator.createLand(position, islandMaterial, islandTotalRadius, -islandDepth, 10);
+        land.transform.parent = levelRootTransform;
+        StartCoroutine(hideOutGenerator.createEnemyHideouts(land,15,hideOutModels));
     }
 
-
-
-    IEnumerator startLevelBuilding()
+    public void createNewLevel(Vector3 position)
     {
-        Vector3 buidingPos = player.transform.position + player.transform.forward * 10f;
-        while (!builded)
+        levelNum++;
+        createCurrLevel(position);
+    }
+
+    private void getEntryExit(Vector3 entry, Vector3 exit)
+    {
+        playerEntry = entry;
+        playerExit = exit;
+        Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), entry, Quaternion.identity);
+        Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), exit, Quaternion.identity);
+    }
+
+    private void OnDisable()
+    {
+        if (landGenerator != null)
         {
-            areaBuilder(ref buidingPos);
-            yield return null;
+            landGenerator.setEntryExit -= getEntryExit;
         }
         
     }
 
-    void pathBuilder(ref Vector3 buidingPos)
+    private void Update()
     {
-        GameObject buildingModule = Instantiate(module, buidingPos, Quaternion.identity);
-        int randomX = UnityEngine.Random.Range(0, 2);
-        int randomZ = randomX == 0 ? 1 : 0;
-        Vector3 offset = new Vector3(randomX * module.GetComponent<MeshRenderer>().localBounds.size.z, 0f, randomZ * module.GetComponent<MeshRenderer>().localBounds.size.z);
-        buidingPos = buildingModule.transform.position + offset;
-    }
-
-    void areaBuilder(ref Vector3 buidingPos)
-    {
-        Vector3 center = new Vector3(buidingPos.x, -0.2f, buidingPos.z);
-        float moduleLength = module.GetComponent<MeshRenderer>().localBounds.size.z;
-        for (int i=0; i< squareArea; i++)
+        if (roofTops.Count == 0) return;
+        if (Vector3.Distance(spearWeapon.position, PlayerService.instance.getPlayerLocation()) < 10f)
         {
-            Instantiate(module, center, Quaternion.identity);
-            int remainingLength = UnityEngine.Random.Range( squareArea-2, squareArea);
-            Vector3 leftExterme = center;
-            Vector3 rightExterme = center;
-            while (remainingLength > 0)
-            {
-                int randomDirection = UnityEngine.Random.Range(0, 2);
-                GameObject buildingModule = randomDirection == 0 ? buildInDirection(direction.left, ref leftExterme, ref rightExterme) : buildInDirection(direction.right, ref leftExterme, ref rightExterme);
-
-                --remainingLength;
-            }
-            center = new Vector3(center.x , center.y, center.z + moduleLength);
+            checkNearestEnemy();
+            updateCurve();
         }
-        builded = true;
     }
 
-    private GameObject buildInDirection(direction _direction, ref Vector3 leftXtreme, ref Vector3 rightXtreme)
+    private void checkNearestEnemy()
     {
-        float moduleLength = module.GetComponent<MeshRenderer>().localBounds.size.z;
-        if (_direction == direction.left) 
-        { 
-            leftXtreme = new Vector3(leftXtreme.x - moduleLength, leftXtreme.y, leftXtreme.z);
-            return Instantiate(module, leftXtreme, Quaternion.identity);
-        }
-        else 
+        Vector3 dirFromPlayer = (spearWeapon.position - PlayerService.instance.getPlayerLocation()).normalized;
+        foreach(Vector3 pos in roofTops)
         {
-            rightXtreme = new Vector3(rightXtreme.x + moduleLength, leftXtreme.y, rightXtreme.z);
-            return Instantiate(module, rightXtreme, Quaternion.identity);
+            Vector3 dirFromWeapon = (pos - spearWeapon.position).normalized;
+            Vector3 dirFromWeaponToAcc = (accesibleEnemy - spearWeapon.position).normalized;
+            if (Vector3.Dot(dirFromPlayer, dirFromWeapon) >= Vector3.Dot(dirFromPlayer, dirFromWeaponToAcc))
+                accesibleEnemy = pos;
         }
     }
-    // Update is called once per frame
-    
+
+    private void updateCurve()
+    {
+        if(accesibleEnemy == targetEnemy) return;
+
+        targetEnemy = accesibleEnemy;
+        curveGenerator.createPath(spearWeapon.position, targetEnemy, 4f , pathElement);
+    }
+
+    internal void getAllRoofPos()
+    {
+        roofTops = hideOutGenerator.getHideOutRoofs();
+    }
 }
-
-public enum direction { left, right};

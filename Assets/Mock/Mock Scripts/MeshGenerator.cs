@@ -1,21 +1,20 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
 
-//[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+
 public class MeshGenerator : MonoBehaviour
 {
     [SerializeField] Transform objCenter;
     [SerializeField] int divAngle;
     [SerializeField] public int radius;
     [SerializeField] float meshDepth;
-    [SerializeField] float sphereScale;
-    [SerializeField] private List<GameObject> visualizers;
+    //[SerializeField] float sphereScale;
     [SerializeField] private Material material;
-    [SerializeField] private QuadraticCurve qCurve;
     [SerializeField] private int hideOutCounts;
     [SerializeField] private GameObject hideOut;
 
@@ -29,62 +28,51 @@ public class MeshGenerator : MonoBehaviour
 
     private void Awake()
     {
-        visualizers = new List<GameObject>();
         
     }
-    private void Start()
-    {
-        generateMesh(transform.position);
-    }
 
-    public void generateMesh(Vector3 landPosition)
+    public void generateLand(Vector3 landPosition)
     {
-        GameObject generated = new GameObject("land");
+        GameObject generated = new GameObject("land",typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider));
         createMesh(generated, radius, divAngle);
-        generated.transform.parent = gameObject.transform;
         generated.transform.position = landPosition + Vector3.up * 1f;
 
         int indexOppToEntry = (360 / divAngle * 2);
         entry = Vector3.Lerp(generated.transform.position, generated.transform.position + vertices[1], 0.9f) + Vector3.up*2;
         exit = Vector3.Lerp(generated.transform.position, generated.transform.position + vertices[indexOppToEntry], 0.9f) + Vector3.up*2;
-        qCurve.initEndPosition?.Invoke(entry);
 
-        StartCoroutine(createEnemyHideouts(generated));
+        //StartCoroutine(createEnemyHideouts(generated));
         //visulaizeVerices();
 
     }
     public GameObject createMesh(GameObject generated,int maxDistance, int angle)
     {
-        Mesh mesh = new Mesh();
-        MeshCollider meshCollider;
-        MeshRenderer meshRenderer;
-        mesh = generated.AddComponent<MeshFilter>().mesh;
+        Mesh mesh = generated.GetComponent<MeshFilter>().mesh;
 
         initializeTrisAndVerices(angle);
         int divisions = (360 / angle);
         generateVertices(divisions, angle, maxDistance);
         generateTringles(divisions);
-        prepareFinalMesh(ref mesh, out meshCollider, out meshRenderer, generated);
+        prepareFinalMesh(ref mesh, generated);
         generated.layer = LayerMask.NameToLayer("Land");
         
         return generated;
     }
 
-    private void prepareFinalMesh(ref Mesh mesh, out MeshCollider meshCollider,out MeshRenderer meshRenderer, GameObject generated)
+    private void prepareFinalMesh(ref Mesh mesh, GameObject generated)
     {
         mesh.Clear();
-        mesh.subMeshCount = 2;
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
-        addMeshRenderer(generated ,out meshRenderer);
-        addMeshCollider(generated, out meshCollider);
+        setMeshRenderer(generated);
+        setMeshCollider(generated);
     }
 
     private void generateVertices(int divisions, int angle, float maxDistance)
     {
         Vector3 center = Vector3.zero;
-        Vector3 objForward = Vector3.back;
+        Vector3 entryDirection = Vector3.back;
         vertices[0] = center;
 
         float offset = 0f;
@@ -95,13 +83,12 @@ public class MeshGenerator : MonoBehaviour
             offset = UnityEngine.Random.Range(7, 10) * 0.1f;
 
             Quaternion axis = Quaternion.AngleAxis(i * angle, Vector3.up);
-            Vector3 direction = axis * objForward;
+            Vector3 direction = axis * entryDirection;
             Vector3 maxPostion = center + direction * maxDistance;
             Vector3 placementPostion = Vector3.Lerp(center, maxPostion, offset);
             if (i == 1)
             {
                 entry = Vector3.Lerp(center, placementPostion, 0.9f);
-                qCurve.initEndPosition?.Invoke(entry += Vector3.up * 5f);
             }
             if (i == maxIterations / 2)
             {
@@ -171,7 +158,7 @@ public class MeshGenerator : MonoBehaviour
         triangles = new int[totalTris * 3];
     }
 
-    private void visulaizeVerices()
+    /*private void visulaizeVerices()
     {
         prepareVisualizersList();
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -183,28 +170,24 @@ public class MeshGenerator : MonoBehaviour
             visualizers.Add(vSphere);
         }
         Destroy(sphere);
-    }
+    }*/
 
-    private void prepareVisualizersList()
+    /*private void prepareVisualizersList()
     {
         foreach (GameObject obj in visualizers)
         {
             Destroy(obj);
         }
         visualizers.Clear();
-    }
+    }*/
 
-    private void addMeshCollider(GameObject generated, out MeshCollider meshCollider)
+    private void setMeshCollider(GameObject generated)
     {
-        meshCollider = generated.AddComponent<MeshCollider>();
-        if (meshCollider == null)
-            meshCollider = gameObject.AddComponent<MeshCollider>();
-        meshCollider.convex = false;
+        generated.GetComponent<MeshCollider>().convex = false;
     }
-    private void addMeshRenderer(GameObject generated, out MeshRenderer meshRenderer)
+    private void setMeshRenderer(GameObject generated)
     {
-        meshRenderer = generated.AddComponent<MeshRenderer>();
-        meshRenderer.material = material;
+        generated.GetComponent<MeshRenderer>().material = material;
     }
 
     private IEnumerator createEnemyHideouts(GameObject generated)
@@ -221,7 +204,7 @@ public class MeshGenerator : MonoBehaviour
                 Debug.DrawLine(rayOrigin, rayOrigin + randomDirection * 20, Color.green, 100f);
                 if (possibleSpwan(hideOuts, hideOutHit.point))
                 {
-                    GameObject hideO = Instantiate(hideOut, hideOutHit.point, Quaternion.identity);
+                    GameObject hideO = GameObject.Instantiate(hideOut, hideOutHit.point, Quaternion.identity, generated.transform);
                     hideOuts.Add(hideO);
                 }
             }
@@ -251,18 +234,7 @@ public class MeshGenerator : MonoBehaviour
         
         float randomX = Mathf.Cos(randomAngle);
         float randomZ = Mathf.Sin(randomAngle);
-        /*float randomHigher = Random.Range(0.8f, 1f);
-        float randomLower = Random.Range(-1f, -0.8f);
-        if (Random.Range(0, 2) == 0)
-        {
-            randomX = Random.Range(-1f, 1f);
-            randomZ = (Random.Range(0, 2) == 0) ? randomHigher : randomLower;
-        }
-        else
-        {
-            randomZ = Random.Range(-1f, 1f);
-            randomX = (Random.Range(0, 2) == 0) ? randomHigher : randomLower;
-        }*/
+
         randomDirection = new Vector3(randomX,randomY,randomZ);
         return randomDirection;
     }

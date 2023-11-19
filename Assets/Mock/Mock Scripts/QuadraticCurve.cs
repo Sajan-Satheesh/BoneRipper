@@ -14,7 +14,6 @@ public class QuadraticCurve : MonoBehaviour
     [SerializeField] List<Vector3> recordedPath = new List<Vector3>();
     [SerializeField] MeshGenerator world;
     public Action<Vector3> initEndPosition;
-    private bool record = false;
 
     private void Awake()
     {

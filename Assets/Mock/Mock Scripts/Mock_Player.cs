@@ -52,7 +52,7 @@ public class Mock_Player : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.C))
         {
             Vector3 positionAtYzero = new Vector3(transform.position.x, Random.Range(0,3), transform.position.z);
-            meshgenerator.generateMesh(positionAtYzero + transform.forward * meshgenerator.radius * 2);
+            meshgenerator.generateLand(positionAtYzero + transform.forward * meshgenerator.radius * 2);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {

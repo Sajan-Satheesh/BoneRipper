@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyService : MonoBehaviour
+public class EnemyService : GenericSingleton<EnemyService>
 {
-    [SerializeField] int enemyCount = 10;
+
     Coroutine SpawnEnemies;
-    [SerializeField] Mock_Enemy enemy;
+    [SerializeField] int enemyCount;
     [SerializeField] float enemySpwanInterval;
-    public static EnemyService instance;
-    [SerializeField] GameObject Locations;
+    [SerializeField] SO_Enemy enemyConfig;
+    [SerializeField] List<EnemyController> enemies;
+    [field : SerializeField] public Transform enemyRoot { get; private set; }
+    
     [SerializeField] private Transform[] allSpawnLocations;
 
     private void Start()
     {
-        allSpawnLocations = Locations.GetComponentsInChildren<Transform>();
         SpawnEnemies = StartCoroutine(createEnemies());
     }
     
@@ -22,8 +23,7 @@ public class EnemyService : MonoBehaviour
     {
         for(int i=0; i < enemyCount; i++)
         {
-            Mock_Enemy enemyInstance = Instantiate(enemy, randomSpawnPoint(), Quaternion.identity);
-            enemyInstance.player = PlayerService.instance.Player;
+            enemies.Add(new EnemyController(enemyConfig, randomSpawnPoint()));
             yield return new WaitForSeconds(enemySpwanInterval);
         }
     }

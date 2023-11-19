@@ -33,7 +33,6 @@ public class CameraFollow : MonoBehaviour
         float distanceBetwPlayer = Vector3.Distance(player.transform.position, transform.position);
         Debug.DrawRay(transform.position, playerDirection*distanceBetwPlayer, Color.yellow);
         RaycastHit hitObstruction;
-        Color hitMaterial;
         if (Physics.Raycast(gameObject.transform.position, playerDirection, out hitObstruction, distanceBetwPlayer))
         {
             hitObstruction.collider.gameObject.GetComponent<MeshRenderer>().material.shader.FindPropertyIndex("transparency").Equals(0.5f);

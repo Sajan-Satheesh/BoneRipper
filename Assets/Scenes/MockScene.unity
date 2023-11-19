@@ -537,12 +537,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 473277443}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1517adba445e0114791488f50fcafa4c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f8aa88cf6b8619408a7fd56c94877e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyCount: 50
+  enemyCount: 20
   enemy: {fileID: 2015230393203055725, guid: 505f8f98f7df8554aaa58238b0d01e6c, type: 3}
-  enemySpwanInterval: 1
+  enemySpwanInterval: 0.5
   Locations: {fileID: 1838582611}
   allSpawnLocations: []
 --- !u!1 &586734075
@@ -589,7 +589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf04ece705050e44f9d5813cacb90bec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 1487493049}
+  playerConfig: {fileID: 0}
 --- !u!1 &587722167
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,10 +731,7 @@ MonoBehaviour:
   divAngle: 5
   radius: 10
   meshDepth: -7
-  sphereScale: 0
-  visualizers: []
   material: {fileID: 217168628916186515, guid: 38837e8cd7391a6498b235a17a601433, type: 3}
-  qCurve: {fileID: 587722168}
   hideOutCounts: 5
   hideOut: {fileID: 281783181}
   <entry>k__BackingField: {x: 0, y: 0, z: 0}
@@ -1339,7 +1336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf04ece705050e44f9d5813cacb90bec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 1487493049}
+  playerConfig: {fileID: 0}
 --- !u!1 &1778304962
 GameObject:
   m_ObjectHideFlags: 0

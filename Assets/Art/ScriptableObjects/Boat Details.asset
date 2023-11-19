@@ -10,6 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 089c02c65e7bf98449182c524478759d, type: 3}
-  m_Name: Boat
+  m_Name: Boat Details
   m_EditorClassIdentifier: 
-  speed: 1
+  boatSpeed: 1
+  islandDetectionDistance: 7
+  boatView: {fileID: 4966585524796848607, guid: 13aa918ab8b9a5d47a672385d312ddfa,
+    type: 3}
+  boatMovementState: 2
+  sinkSpeed: 0.2
+  islandMask:
+    serializedVersion: 2
+    m_Bits: 512
