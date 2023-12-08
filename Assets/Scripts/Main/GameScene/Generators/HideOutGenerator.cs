@@ -9,11 +9,18 @@ public class HideOutGenerator
 {
     //[SerializeField] private int hideOutCounts;
     //[SerializeField] private GameObject hideOut;
-    List<GameObject> hideOuts = new List<GameObject>();
-    List<Vector3> hideOutRoofs = new List<Vector3>();
+    List<HideOutView> hideOuts = new List<HideOutView>();
+    
 
-
-    public IEnumerator createEnemyHideouts(GameObject land, int hideOutCounts, List<GameObject> hideOutModels)
+    public void removeAllHideOuts()
+    {
+        foreach (HideOutView item in hideOuts)
+        {
+            Object.Destroy(item.gameObject);
+        }
+        hideOuts.Clear();
+    }
+    public IEnumerator createEnemyHideouts(GameObject land, int hideOutCounts, List<HideOutView> hideOutModels)
     {
         Debug.Log("creating enemy HideOuts");
         
@@ -29,7 +36,7 @@ public class HideOutGenerator
                 Debug.DrawLine(rayOrigin, rayOrigin + randomDirection * 20, Color.green, 10f);
                 if (possibleSpwan(hideOuts, hideOutHit.point, hideOutModels[randomHideOutIndex].GetComponent<MeshRenderer>().bounds.size.y))
                 {
-                    GameObject hideO = Object.Instantiate(hideOutModels[randomHideOutIndex], hideOutHit.point, Quaternion.identity, land.transform);
+                    HideOutView hideO = Object.Instantiate(hideOutModels[randomHideOutIndex], hideOutHit.point, Quaternion.identity, land.transform);
                     hideO.transform.right = getPositionInXZplane(rayOrigin,hideOutHit.point.y) - hideOutHit.point;
                     hideOuts.Add(hideO);
                 }
@@ -41,17 +48,48 @@ public class HideOutGenerator
         WorldService.instance.getAllRoofPos();
     }
 
+    public IEnumerator createInCircularPat(GameObject land, int hideOutCounts, List<HideOutView> hideOutModels, float minRadius, float maxRadius)
+    {
+        Debug.Log("creating enemy HideOuts");
+
+        while (hideOuts.Count < hideOutCounts)
+        {
+            Vector3 randomDirection = generateRandomDirection(out randomDirection);
+            Vector3 randomPosition = Random.Range(minRadius, maxRadius) * randomDirection + land.transform.position;
+            int randomHideOutIndex = Random.Range(0, hideOutModels.Count);
+            if (possibleSpwan(hideOuts, randomPosition, hideOutModels[randomHideOutIndex].GetComponent<MeshRenderer>().bounds.size.y))
+            {
+                HideOutView hideO = Object.Instantiate(hideOutModels[randomHideOutIndex], randomPosition, Quaternion.identity, land.transform);
+                hideO.transform.right = land.transform.position - randomPosition;
+                hideOuts.Add(hideO);
+            }
+            yield return null;
+        }
+        WorldService.instance.getAllRoofPos();
+    }
+
     public List<Vector3> getHideOutRoofs()
     {
         if (hideOuts.Count == 0) return null;
-
+        List<Vector3> hideOutRoofs = new List<Vector3>();
         hideOutRoofs.Clear();
         foreach (var hideOut in hideOuts)
         {
-            hideOutRoofs.Add(hideOut.transform.position + Vector3.up * 3f);
+            hideOutRoofs.Add(hideOut.TopEnemySpwanLoc);
         }
         return hideOutRoofs;
+    }
 
+    public List<Transform> getHideOutTransform()
+    {
+        if (hideOuts.Count == 0) return null;
+        List<Transform> hideOutPos = new List<Transform>();
+        hideOutPos.Clear();
+        foreach (var hideOut in hideOuts)
+        {
+            hideOutPos.Add(hideOut.transform);
+        }
+        return hideOutPos;
     }
 
     private Vector3 getPositionInXZplane(Vector3 position, float yPos)
@@ -59,7 +97,7 @@ public class HideOutGenerator
         return new Vector3(position.x, yPos, position.z);
     }
 
-    private bool possibleSpwan(List<GameObject> hideOuts, Vector3 spawnPosition , float minSize)
+    private bool possibleSpwan(List<HideOutView> hideOuts, Vector3 spawnPosition , float minSize)
     {
         for (int i = 0; i < hideOuts.Count; i++)
         {
@@ -67,7 +105,7 @@ public class HideOutGenerator
             float distancefromEntry = Vector3.Distance(WorldService.instance.playerEntry, spawnPosition);
             float distancefromExit = Vector3.Distance(WorldService.instance.playerExit, spawnPosition);
 
-            if (distanceBetweenHideOuts < minSize || distancefromEntry < minSize || distancefromExit < minSize)
+            if (distanceBetweenHideOuts < minSize || distancefromEntry < minSize || distancefromExit <= minSize)
             {
                 return false;
             }
@@ -77,7 +115,7 @@ public class HideOutGenerator
 
     private Vector3 generateRandomDirection(out Vector3 randomDirection)
     {
-        float randomY = UnityEngine.Random.Range(0f, -0.1f);
+        float randomY = 0f;
         float randomAngle = UnityEngine.Random.Range(0f,360f);
         
         float randomX = Mathf.Cos(randomAngle);

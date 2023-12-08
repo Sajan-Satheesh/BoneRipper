@@ -6,7 +6,7 @@ class BoatModel
     public float currentSpeed;
     public float sinkingSpeed;
     public float islandDetectionDistance;
-    public Vector3 spawnPosition;
+    public Vector3 spawnPosition { get; set; }
     public GameObject boat;
     public GameObject boatSeat;
     public GameObject boatObj;

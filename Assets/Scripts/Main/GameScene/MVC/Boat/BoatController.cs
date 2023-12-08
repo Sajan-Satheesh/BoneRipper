@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoatController
@@ -14,20 +15,31 @@ public class BoatController
         
     }
 
+    public void initializeDefaultBoatController()
+    {
+        boatModel.isBoatSafe = true;
+        boatModel.isBoatHit = false;
+        boatModel.isBoatVisible = true;
+        //  setState(BoatMovementStates.spawn);
+    }
+
     #region boat state functions
     public void onUpdate()
     {
         runStateMachine();
     }
 
+    public void setState(BoatMovementStates state)
+    {
+        boatModel.boatMovementState = state;
+    }
     void runStateMachine()
     {
         switch (boatModel.boatMovementState)
         {
             case BoatMovementStates.stationary:
-                spawnBoat(boatModel.spawnPosition);
                 break;
-            case BoatMovementStates.moving:
+            case BoatMovementStates.moveTowards:
                 moveBoat();
                 break;
             case BoatMovementStates.sinking:
@@ -36,12 +48,15 @@ public class BoatController
             case BoatMovementStates.hidden:
                 hideBoat();
                 break;
-            case BoatMovementStates.withPlayer:
+            case BoatMovementStates.moveAway:
+                moveAway();
                 break;
             default:
                 break;
         }
     }
+
+    
     #endregion
 
     public BoatMovementStates getBoatState()
@@ -62,9 +77,28 @@ public class BoatController
     {
         return boatModel.boatSeat.transform;
     }
-    private void setState(BoatMovementStates state)
+    
+
+    private void moveAway()
     {
-        boatModel.boatMovementState = state;
+        rowBoatForward();
+        trackIslandBehind();
+
+    }
+
+    private void trackIslandBehind()
+    {
+        boatModel.ray_IslandDetector.origin = boatModel.boatObj.transform.position + -boatModel.boatObj.transform.forward * boatModel.boatObj.GetComponent<MeshRenderer>().bounds.size.z / 2;
+        boatModel.ray_IslandDetector.direction = -boatModel.boatObj.transform.forward;
+        Debug.DrawLine(boatModel.ray_IslandDetector.origin, boatModel.ray_IslandDetector.origin + boatModel.ray_IslandDetector.direction * Mathf.Infinity, Color.black);
+        if (Physics.Raycast(boatModel.ray_IslandDetector, out boatModel.rayHit_IslandDetector, Mathf.Infinity, boatModel.mask_IslandDetector))
+        {
+            if (Vector3.Distance(getBoatPosition(), boatModel.rayHit_IslandDetector.point) > 20f)
+            {
+                BoatService.instance.onAreaPassed?.Invoke();
+                BoatService.instance.isMovingTowards = true;
+            }
+        }
     }
 
     private void moveBoat()
@@ -75,7 +109,7 @@ public class BoatController
     private void rowBoatForward()
     {
         boatModel.currentSpeed = boatModel.defaultSpeed * Time.deltaTime;
-        boatModel.boat.transform.Translate(boatModel.boat.transform.forward * boatModel.currentSpeed);
+        boatModel.boat.transform.Translate(Vector3.forward * boatModel.currentSpeed);
     }
     private void detectIslandAhead(float distance)
     {
@@ -92,6 +126,7 @@ public class BoatController
             }
             else if(PlayerService.instance.readyToJump == false)
             {
+                BoatService.instance.isMovingTowards = false;
                 setState(BoatMovementStates.sinking);
             }
             
@@ -101,6 +136,7 @@ public class BoatController
         if (boatModel.isBoatHit)
         {
             //PlayerService.instance.readyToJump = false;
+            boatModel.isBoatHit = false;
             setState(BoatMovementStates.sinking);
         }
     }
@@ -125,10 +161,14 @@ public class BoatController
         boatModel.isBoatSafe = true;
     }
 
-    private void spawnBoat(Vector3 spawnPosition)
+    public void spawnBoat(Vector3 spawnPosition)
     {
         boatModel.boat.transform.position = spawnPosition;
         unhideBoat();
+        if (BoatService.instance.isMovingTowards)
+        {
+            setState(BoatMovementStates.moveTowards);
+        }
     }
 
     private void unhideBoat()

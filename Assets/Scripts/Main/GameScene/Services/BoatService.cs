@@ -7,26 +7,62 @@ public class BoatService : GenericSingleton<BoatService>
 {
     private BoatController boatController;
     [SerializeField] private SO_Boat boatSpecs;
-    [SerializeField] private float islandSpawnSetback;
-    [SerializeField] private float islandSpawnheight;
+    
+    [SerializeField] public bool isMovingTowards = true;
     [field: SerializeField] public Transform boatRootTransform { get; private set; }
-
+    [field: SerializeField] public Action onAreaPassed { get; set; }
+    [field: SerializeField] public Action<Vector3> onBoatInNewLevel { get; set; }
 
     private void Start()
     {
-        initializeBoat();
-        WorldService.instance.createCurrLevel(boatController.getBoatPosition() + Vector3.forward * (WorldService.instance.islandTotalRadius + islandSpawnSetback) + Vector3.up * islandSpawnheight);
+        WorldService.instance.onExitTrigger += reactOnExitTrigger_World;
+        PlayerService.instance.onReachingBoat += reactOnReachingBoat;
+        WorldService.instance.onNewLevel += reactOnNewLevel_World;
+        reactOnNewLevel_World();
+    }
+
+    #region Requests
+    private void requestPlayerInitialization()
+    {
         PlayerService.instance.initializePlayer(boatController.getBoatPosition());
     }
+    #endregion
 
-    void initializeBoat()
+    #region re-Actions
+    private void reactOnNewLevel_World()
     {
-        if (boatController != null) return;
-
-        boatController = new BoatController(boatSpecs);
-
+        isMovingTowards = true;
+        initializeBoat(Vector3.zero);
+        requestPlayerInitialization();
+        onBoatInNewLevel?.Invoke(boatController.getBoatPosition());
     }
 
+    private void reactOnReachingBoat()
+    {
+        boatController.setState(BoatMovementStates.moveAway);
+    }
+
+    private void reactOnExitTrigger_World()
+    {
+        initializeBoat(WorldService.instance.getBoatExit());
+    } 
+    #endregion
+
+    void initializeBoat(Vector3 position)
+    {
+        
+        if (boatController != null)
+        {
+            boatController.setState(BoatMovementStates.stationary);
+            boatController.spawnBoat(position);
+            boatController.initializeDefaultBoatController();
+        }
+        else
+        {
+            boatController = new BoatController(boatSpecs);
+        }
+        
+    }
     public Vector3 getBoatPos()
     {
         return boatController.getBoatPosition();

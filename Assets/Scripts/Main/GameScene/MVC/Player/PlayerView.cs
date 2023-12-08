@@ -3,11 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerView : MonoBehaviour
+public class PlayerView : MonoBehaviour, IDestructable
 {
-    PlayerController playerController;
-    [SerializeField] PlayerState playerState;
-    [SerializeField] PlayerAnimationStates animState;
+    [SerializeField] PlayerController playerController;
 
     public void getPlayerController(PlayerController _playerController)
     {
@@ -18,13 +16,7 @@ public class PlayerView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerController.onUpdate();
-        if ((int)Time.time % 2 == 0)
-        {
-            playerState = playerController.getPlayerState();
-            animState = playerController.getAnimState();
-        }
-           
+        playerController.onUpdate();     
     }
 
     public void beginCoroutine(Coroutine coroutine, Func<IEnumerator> func)
@@ -36,5 +28,23 @@ public class PlayerView : MonoBehaviour
     {
         StopCoroutine(coroutine);
         coroutine = null;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.layer == 4)
+        {
+            playerController.requestGameOver();
+        }
+    }
+
+    public Controller getController()
+    {
+        return playerController;
+    }
+
+    Destructables IDestructable.getDestructableType()
+    {
+        return Destructables.player;
     }
 }

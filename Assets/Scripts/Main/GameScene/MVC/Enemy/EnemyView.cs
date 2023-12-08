@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyView : MonoBehaviour
+public class EnemyView : MonoBehaviour, IDestructable
 {
     EnemyController enemyController;
 
@@ -28,5 +28,15 @@ public class EnemyView : MonoBehaviour
     {
         StopCoroutine(coroutine);
         coroutine = null;
+    }
+
+    public Controller getController()
+    {
+        return enemyController;
+    }
+
+    Destructables IDestructable.getDestructableType()
+    {
+        return Destructables.groundEnemy;
     }
 }

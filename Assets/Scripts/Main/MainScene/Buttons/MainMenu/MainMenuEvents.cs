@@ -1,10 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuEvents : MonoBehaviour
 {
     [SerializeField] private GameObject settings;
-    // Start is called before the first frame update
+    [SerializeField] private GameObject backButton;
+    private Stack<GameObject> tracker = new Stack<GameObject>();
+    private void Awake()
+    {
+        backButton.SetActive(false);
+    }
+    private void trackButtons(GameObject obj)
+    {
+        tracker.Push(obj);
+        if(tracker.Count > 0)
+        {
+            backButton.SetActive(true);
+        }
+    }
+
+    public void onBackClick()
+    {
+        tracker.Pop().SetActive(false);
+        if(tracker.Count == 0 )
+        {
+            backButton.SetActive(false);
+            gameObject.SetActive(true);
+        }
+    }
+
     public void QuitGame()
     {
         Application.Quit();
@@ -18,5 +46,12 @@ public class MainMenuEvents : MonoBehaviour
     {
         gameObject.SetActive(false);
         req.SetActive(true);
+        trackButtons(req);
+    }
+
+    public void playGame()
+    {
+        SceneManager.LoadScene(1);
+        
     }
 }
