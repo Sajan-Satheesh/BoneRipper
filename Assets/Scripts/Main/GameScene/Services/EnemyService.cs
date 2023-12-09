@@ -1,7 +1,9 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Random = UnityEngine.Random;
 
 public class EnemyService : GenericSingleton<EnemyService>
 {
@@ -10,6 +12,8 @@ public class EnemyService : GenericSingleton<EnemyService>
     [SerializeField] float groundEnemySpwanInterval;
     [SerializeField] SO_GroundEnemy groundEnemyConfig;
     [SerializeField] SO_TowerEnemy roofEnemyConfig;
+    public Action onEnemyDestroyed;
+
     private List<GroundEnemyController> groundEnemies { get; set; } = new List<GroundEnemyController>();
     private List<TowerEnemyController> roofEnemies { get; set; } = new List<TowerEnemyController>();
     private List<Transform> groundEnemySpawnTransforms { get; set; } = new List<Transform>();
@@ -189,6 +193,7 @@ public class EnemyService : GenericSingleton<EnemyService>
             destroyGroundEnemy(enemy);
             groundEnemies.Remove(enemy);
         }
+        onEnemyDestroyed?.Invoke();
     }
 
 

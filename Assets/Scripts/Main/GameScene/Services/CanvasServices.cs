@@ -10,7 +10,9 @@ public class CanvasServices : MonoBehaviour
 {
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] Image healthMeter;
-    [SerializeField] TMP_Text levelName;
+    [SerializeField] TMP_Text T_levelName;
+    [SerializeField] TMP_Text T_boneCount;
+    private int boneCount = 0;
     [SerializeField, Range(0, 1)] float levelNameAnimationSpeed;
 
     private float actualHealth;
@@ -24,20 +26,22 @@ public class CanvasServices : MonoBehaviour
     private void Awake()
     {
         resetLevelName();
-        levelName.gameObject.SetActive(true);
+        T_levelName.gameObject.SetActive(true);
     }
     private void Start()
     {
         PlayerService.instance.onGameOver += reactOnGameOver;
         WorldService.instance.onNewLevel += reactOnNewLevel;
+        EnemyService.instance.onEnemyDestroyed += reactOnEnemyDestroyed;
     }
 
-  
+   
+
     private void Update()
     {
         if (actualHealth != healthMeter.fillAmount) playHealthReduction();
         if (hudBonesCount != actualBonesCount) playBoneCollection();
-        if (levelName.gameObject.activeSelf) playLevelCountDisplay();
+        if (T_levelName.gameObject.activeSelf) playLevelCountDisplay();
     }
 
     #region animations
@@ -45,7 +49,7 @@ public class CanvasServices : MonoBehaviour
     private void playLevelCountDisplay()
     {
         levelNameAnimation();
-        if (levelName.color.a <= 0)
+        if (T_levelName.color.a <= 0)
         {
             resetLevelName();
         }
@@ -54,17 +58,17 @@ public class CanvasServices : MonoBehaviour
     private void levelNameAnimation()
     {
         hudLevelTarget += levelNameAnimationSpeed * Time.deltaTime;
-        Color nameColor = levelName.color;
+        Color nameColor = T_levelName.color;
         nameColor.a = 1f - Mathf.Abs(hudLevelTarget);
-        levelName.color = nameColor;
+        T_levelName.color = nameColor;
     }
 
     private void resetLevelName()
     {
-        levelName.gameObject.SetActive(false);
-        Color nameColor = levelName.color;
+        T_levelName.gameObject.SetActive(false);
+        Color nameColor = T_levelName.color;
         nameColor.a = 0f;
-        levelName.color = nameColor;
+        T_levelName.color = nameColor;
         hudLevelTarget = -1f;
     }
     #endregion
@@ -77,10 +81,15 @@ public class CanvasServices : MonoBehaviour
     private void playBoneCollection()
     {
         hudBonesCount = actualBonesCount;
-    } 
+    }
     #endregion
 
     #region re-Actions
+    private void reactOnEnemyDestroyed()
+    {
+        boneCount += 5;
+        T_boneCount.text = boneCount.ToString();
+    }
     private void reactOnGameOver()
     {
         activateGameOverScreen();
@@ -97,12 +106,14 @@ public class CanvasServices : MonoBehaviour
     private void reactOnNewLevel()
     {
         hudLevelCount = requestLevelNum();
-        levelName.text = "Level " + hudLevelCount;
-        levelName.gameObject.SetActive(true);
+        T_levelName.text = "Level " + hudLevelCount;
+        T_levelName.gameObject.SetActive(true);
         if(gameOverScreen.activeSelf)
         {
             deActivateGameOverScreen();
+            boneCount= 0;
         }
+        T_boneCount.text = boneCount.ToString();
     }
 
     #endregion
