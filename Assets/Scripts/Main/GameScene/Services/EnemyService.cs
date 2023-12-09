@@ -12,7 +12,7 @@ public class EnemyService : GenericSingleton<EnemyService>
     [SerializeField] float groundEnemySpwanInterval;
     [SerializeField] SO_GroundEnemy groundEnemyConfig;
     [SerializeField] SO_TowerEnemy roofEnemyConfig;
-    public Action onEnemyDestroyed;
+    public Action onEnemyDestroyed { get; set; }
 
     private List<GroundEnemyController> groundEnemies { get; set; } = new List<GroundEnemyController>();
     private List<TowerEnemyController> roofEnemies { get; set; } = new List<TowerEnemyController>();

@@ -13,11 +13,11 @@ public class CanvasServices : MonoBehaviour
     [SerializeField] TMP_Text T_levelName;
     [SerializeField] TMP_Text T_boneCount;
     private int boneCount = 0;
+    private string highScoreKey = "HighScore";
     [SerializeField, Range(0, 1)] float levelNameAnimationSpeed;
-
+    
     private float actualHealth;
     private int actualBonesCount;
-
 
     private int hudLevelCount = 1;
     private float hudLevelTarget = -1f;
@@ -89,7 +89,21 @@ public class CanvasServices : MonoBehaviour
     {
         boneCount += 5;
         T_boneCount.text = boneCount.ToString();
+        checkHighScore();
     }
+
+    private void checkHighScore()
+    {
+        if (!PlayerPrefs.HasKey(highScoreKey))
+        {
+            PlayerPrefs.SetInt(highScoreKey, boneCount);
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt(highScoreKey) < boneCount) PlayerPrefs.SetInt(highScoreKey, boneCount);
+        }
+    }
+
     private void reactOnGameOver()
     {
         activateGameOverScreen();
