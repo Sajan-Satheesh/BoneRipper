@@ -111,22 +111,22 @@ public class WeaponServices : GenericSingleton<WeaponServices>
 
     public void shootArrows(Vector3 position, Vector3 direction)
     {
-        Shootable shootable = shootables[Weapons.spear].getShootable(position);
+        Shootable shootable = shootables[Weapons.spear].getItem(position);
         shootable.transform.up = direction.normalized;
     }
     public void returnShootable(Shootable shootable)
     {
-        shootables[Weapons.spear].returnShootable(shootable);
+        shootables[Weapons.spear].returnItem(shootable);
     }
 
     private void updateArrows()
     {
-        if (shootables[Weapons.spear].bulletsInUse.Count <= 0) return;
+        if (shootables[Weapons.spear].inUse.Count <= 0) return;
         ++arrowIndex;
-        if (arrowIndex >= shootables[Weapons.spear].bulletsInUse.Count) arrowIndex = 0;
-        if(shootables[Weapons.spear].bulletsInUse[arrowIndex].transform.position.y < PlayerService.instance.getPlayerLocation().y)
+        if (arrowIndex >= shootables[Weapons.spear].inUse.Count) arrowIndex = 0;
+        if(shootables[Weapons.spear].inUse[arrowIndex].transform.position.y < PlayerService.instance.getPlayerLocation().y)
         {
-            returnShootable(shootables[Weapons.spear].bulletsInUse[arrowIndex]);
+            returnShootable(shootables[Weapons.spear].inUse[arrowIndex]);
         }
     }
 

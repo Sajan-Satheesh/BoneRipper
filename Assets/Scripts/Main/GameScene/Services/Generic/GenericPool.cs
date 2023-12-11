@@ -2,47 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract public class GenericPool<T>
+abstract public class GenericPool<W,T>
 {
-    protected T item;
-    protected Vector3 spwanPosition;
+    protected W item;
 
-    Stack<T> bulletsAvailable = new Stack<T>();
-    public List<T> bulletsInUse = new List<T>();
+    Stack<W> available = new Stack<W>();
+    public List<W> inUse = new List<W>();
 
-    public GenericPool(T item)
+    public GenericPool(W item)
     {
         this.item = item;
     }
 
-    abstract protected void instantiationLogic(out T item);
-    abstract protected void getLogic(ref T item);
-    abstract protected void returnLogic();
+    abstract protected void instantiationLogic(out W newItem , T spwanRef);
+    abstract protected void getLogic(ref W releasedItem , T spwanRef);
+    abstract protected void returnLogic(ref W returnedItem);
 
-    public void returnShootable(T shootable)
+    public void returnItem(W returnedItem)
     {
-        if (bulletsInUse.Count == 0) return;
+        if (inUse.Count == 0) return;
 
-        bulletsInUse.Remove(shootable);
-        returnLogic();
-        bulletsAvailable.Push(shootable);
+        inUse.Remove(returnedItem);
+        returnLogic(ref returnedItem);
+        available.Push(returnedItem);
     }
 
 
-    public T getShootable(Vector3 position)
+    public W getItem(T spawnRef)
     {
-        this.spwanPosition = position;
-        T topElement;
-        if (bulletsAvailable.Count == 0)
+        W topElement;
+        if (available.Count == 0)
         {
-            instantiationLogic(out topElement);
-            bulletsInUse.Add(topElement);
+            instantiationLogic(out topElement, spawnRef);
+            inUse.Add(topElement);
         }
         else
         {
-            topElement = bulletsAvailable.Pop();
-            getLogic(ref topElement);
-            bulletsInUse.Add(topElement);
+            topElement = available.Pop();
+            getLogic(ref topElement, spawnRef);
+            inUse.Add(topElement);
 
         }
         return topElement;

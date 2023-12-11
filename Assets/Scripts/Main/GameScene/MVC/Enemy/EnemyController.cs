@@ -1,24 +1,30 @@
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 [Serializable]
 public class EnemyController : Controller
 {
-    [SerializeField] protected EnemyView enemyView;
+    protected EnemyView enemyView;
+    //protected EnemyModel enemyModel;
 
     public EnemyController(SO_Enemy enemyDetails, Transform spawnTransform)
     {
-        enemyView = GameObject.Instantiate<EnemyView>(enemyDetails.enemyView, spawnTransform.position, spawnTransform.rotation, EnemyService.instance.enemyRoot);
+        enemyView = Object.Instantiate<EnemyView>(enemyDetails.enemyView, spawnTransform.position, spawnTransform.localRotation, EnemyService.instance.enemyRoot);
         enemyView.getEnemyController(this);
-        enemyView.transform.forward = spawnTransform.forward;
+        enemyView.transform.localRotation = spawnTransform.localRotation;
+        //enemyView.transform.forward = spawnTransform.right;
     }
     public EnemyController(SO_Enemy enemyDetails, Vector3 spawnPosition)
     {
-        enemyView = GameObject.Instantiate<EnemyView>(enemyDetails.enemyView, spawnPosition, Quaternion.identity, EnemyService.instance.enemyRoot);
+        enemyView = Object.Instantiate<EnemyView>(enemyDetails.enemyView, spawnPosition, Quaternion.identity, EnemyService.instance.enemyRoot);
         enemyView.getEnemyController(this);
 
     }
+
+
 
     public void setEnemyRoot(Transform parent)
     {

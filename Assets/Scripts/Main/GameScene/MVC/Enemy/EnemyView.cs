@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemyView : MonoBehaviour, IDestructable
 {
     EnemyController enemyController;
+    [field: SerializeField] public List<Transform> bodyPartPositions { get; private set; } = new List<Transform>();
 
     public void getEnemyController(EnemyController _enemyController)
     {

@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class EnemyService : GenericSingleton<EnemyService>
 {
     [field: SerializeField] public Transform enemyRoot { get; private set; }
+    [SerializeField] int arrowShootableEnemies;
     [SerializeField] int enemyCount;
     [SerializeField] float groundEnemySpwanInterval;
     [SerializeField] SO_GroundEnemy groundEnemyConfig;
@@ -85,7 +86,7 @@ public class EnemyService : GenericSingleton<EnemyService>
         {
             stopCoroutine(randomShooting);
         }
-        randomShooting = StartCoroutine(randomRoofEnemyAttack(1));
+        randomShooting = StartCoroutine(randomRoofEnemyAttack(arrowShootableEnemies));
     }
 
     IEnumerator randomRoofEnemyAttack(int attackingEnemyCount)
@@ -145,7 +146,7 @@ public class EnemyService : GenericSingleton<EnemyService>
         }
     }
 
-    Transform randomSpawnPoint(List<Transform> spawnPoints)
+    Transform randomSpawnPoint( List<Transform> spawnPoints)
     {
         int randomIndex= Random.Range(0, spawnPoints.Count);
         return spawnPoints[randomIndex];
@@ -190,6 +191,7 @@ public class EnemyService : GenericSingleton<EnemyService>
     {
         if (groundEnemies.Contains(enemy))
         {
+            BoneServices.instance.spawnBones(enemy.getBodyParts());
             destroyGroundEnemy(enemy);
             groundEnemies.Remove(enemy);
         }

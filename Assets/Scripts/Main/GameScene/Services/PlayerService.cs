@@ -51,6 +51,7 @@ public class PlayerService : GenericSingleton<PlayerService>
         else
         {
             player = new PlayerController(playerConfig, spawnPosition);
+            GameService.instance.setPlayerShopSlot(player.getPlayerSlot());
         }
     }
 

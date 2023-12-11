@@ -298,4 +298,8 @@ public class PlayerController : Controller
         PlayerService.instance.onInitialtingJump -= reactJumpToTarget;
     }
 
+    public PlayerShopSlots getPlayerSlot()
+    {
+        return playerModel.player.GetComponent<PlayerShopSlots>();
+    }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 [Serializable]
 public class TowerEnemyController : EnemyController 
@@ -19,6 +20,11 @@ public class TowerEnemyController : EnemyController
     {
         updateStateMachine();
     }
+    public List<Transform> getBodyParts()
+    {
+        return enemyModel.bodyParts;
+    }
+
     private void setAnimationState(
     EnemyAnimationStates state,
     bool blend = false,

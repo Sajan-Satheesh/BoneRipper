@@ -68,6 +68,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbae12611d4f34d47a1f269b883f2b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <bodyPartPositions>k__BackingField:
+  - {fileID: 6462700561159905741}
+  - {fileID: 5049613723305781247}
+  - {fileID: 1019066111856715917}
+  - {fileID: 3594624568593496735}
+  - {fileID: 4018171495277799398}
+  - {fileID: 6514103816707880064}
+  - {fileID: 6729302053529543869}
+  - {fileID: 1392074275745781552}
+  - {fileID: 6500110774451780802}
+  - {fileID: 7694132750408898907}
+  - {fileID: 7165527090432051603}
+  - {fileID: 3132853679413559918}
+  - {fileID: 5700552964554366444}
+  - {fileID: 7980232152348556721}
 --- !u!136 &-1702024769971302875
 CapsuleCollider:
   m_ObjectHideFlags: 0

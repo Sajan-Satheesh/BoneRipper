@@ -16,5 +16,5 @@ MonoBehaviour:
     type: 3}
   enemyHealth: 100
   defaultWeapon: 0
-  enemySpeed: 1
+  enemySpeed: 1.5
   defaultState: 5

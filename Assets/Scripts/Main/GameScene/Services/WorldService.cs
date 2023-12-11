@@ -16,7 +16,7 @@ public class WorldService : GenericSingleton<WorldService>
 
 
     [field : SerializeField] Transform levelRootTransform { get; set; }
-    private GameObject currentLevelLand;
+    public GameObject currentLevelLand { get; set; }
     [SerializeField] Material islandMaterial;
 
     [Header("Finish",order =1)]

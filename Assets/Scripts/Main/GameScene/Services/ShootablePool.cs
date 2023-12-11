@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootablePool : GenericPool<Shootable>
+public class ShootablePool : GenericPool<Shootable,Vector3>
 {
     public ShootablePool(Shootable shootable) : base(shootable) { }
 
-    protected override void instantiationLogic(out Shootable newItem)
+    protected override void instantiationLogic(out Shootable newItem, Vector3 spawnReference)
     {
-        newItem = Object.Instantiate(item, spwanPosition, Quaternion.identity);
+        newItem = Object.Instantiate(item, spawnReference, Quaternion.identity);
     }
 
-    protected override void getLogic(ref Shootable item)
+    protected override void getLogic(ref Shootable releasedItem, Vector3 spawnReference)
     {
-        item.transform.position = spwanPosition;
-        item.gameObject.SetActive(true);
+        releasedItem.transform.position = spawnReference;
+        releasedItem.gameObject.SetActive(true);
     }
 
-    protected override void returnLogic()
+    protected override void returnLogic(ref Shootable returnedItem)
     {
-        item.gameObject.SetActive(false);
+        returnedItem.gameObject.SetActive(false);
     }
 
 }

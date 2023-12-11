@@ -1821,6 +1821,7 @@ GameObject:
   - component: {fileID: 5598331466084517877}
   - component: {fileID: 5837549261999555939}
   - component: {fileID: 1804243470869506220}
+  - component: {fileID: 2452091345927179053}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -1908,6 +1909,26 @@ CapsuleCollider:
   m_Height: 1.6016335
   m_Direction: 1
   m_Center: {x: 0.0056757927, y: 0.8456924, z: 0}
+--- !u!114 &2452091345927179053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4700889571901217429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a283868fad0a0448acb4df5adb8cb13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HeadHairSlot: {fileID: 5007791779420404555}
+  HeadItemSlot: {fileID: 0}
+  FaceItemSlot: {fileID: 8626528844952395379}
+  FaceHairSlot: {fileID: 9155688117072882529}
+  UpperSlot: {fileID: 3857316932488056077}
+  HandSlot: {fileID: 8864358271022643199}
+  LowerSlot: {fileID: 6475328200927253899}
+  FootSlot: {fileID: 6162661215619742535}
 --- !u!1 &4958912164061277407
 GameObject:
   m_ObjectHideFlags: 0

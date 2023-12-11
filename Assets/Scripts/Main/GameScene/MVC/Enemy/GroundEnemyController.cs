@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -11,7 +12,9 @@ public class GroundEnemyController : EnemyController
     {
         enemyModel = new GroundEnemyModel(enemyDetails, base.enemyView, spawnTransform.position);
         enemyView.getEnemyController(this);
+        //base.enemyModel = this.enemyModel;
     }
+
 
     override public void onUpdate()
     {
@@ -66,6 +69,10 @@ public class GroundEnemyController : EnemyController
         Quaternion toLookDirection = Quaternion.LookRotation(base.flatPosDirection(toLookPosition) - base.flatPosDirection(enemyModel.enemy.transform.position), Vector3.up);
         Quaternion finalRotation = Quaternion.Slerp(enemyModel.enemy.transform.rotation, toLookDirection, 0.1f);
         enemyModel.enemy.transform.rotation = finalRotation;
+    }
+    public List<Transform> getBodyParts()
+    {
+        return enemyModel.bodyParts;
     }
     public override void destructEnemy()
     {
