@@ -25,8 +25,9 @@ public class ShopItem : MonoBehaviour
     }
     private void onButtonClick()
     {
-        PlayerBodySlots currentBodySlot = shopMenuRef.GetComponent<ShopMenu>().menuItemList.menuItems[listIndex].playerSlot;
-        shopMenuRef.GetComponent<ShopMenu>().player.GetComponent<PlayerShopSlots>().setSlotItem(shopMenuRef.GetComponent<ShopMenu>().menuItemList.menuItems[listIndex]);
-        GameService.instance.addToPurchaseSlot(currentBodySlot, shopMenuRef.GetComponent<ShopMenu>().player.GetComponent<PlayerShopSlots>().getMeshInSlot(currentBodySlot));
+        SO_MenuItem selectedItem = shopMenuRef.GetComponent<ShopMenu>().menuItemList.menuItems[listIndex];
+        //shopMenuRef.GetComponent<ShopMenu>().player.GetComponent<PlayerShopSlots>().setSlotItem(selectedItem);
+        GameService.instance.addToSlot(selectedItem.playerSlot, selectedItem);
+        GameService.instance.setPlayerShopSlot(shopMenuRef.GetComponent<ShopMenu>().player.GetComponent<PlayerShopSlots>());
     }
 }

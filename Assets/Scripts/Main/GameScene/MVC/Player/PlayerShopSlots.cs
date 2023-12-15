@@ -11,20 +11,20 @@ public class PlayerShopSlots : MonoBehaviour
     [SerializeField] SkinnedMeshRenderer LowerSlot;
     [SerializeField] SkinnedMeshRenderer FootSlot;
 
-    public void setSlotItem(SO_MenuItem item)
+    /*public void setSlotItem(SO_MenuItem item, bool setDefault = false)
     {
         SkinnedMeshRenderer slotToInsert;
         getDesiredSlot(item.playerSlot,out slotToInsert);
-        insertInSlot(item.item, slotToInsert);
-    }
-
-    public void setSlotItem(PlayerBodySlots slot, Mesh mesh)
+        insertInSlot(item.itemMesh, slotToInsert, setDefault);
+    }*/
+    public void setSlotItem(SlotData data)
     {
         SkinnedMeshRenderer slotToInsert;
-        getDesiredSlot(slot, out slotToInsert);
-        insertInSlot(mesh, slotToInsert);
+        getDesiredSlot(data.playerSlot, out slotToInsert);
+        insertInSlot(data.itemMesh, slotToInsert);
     }
-    public Mesh getMeshInSlot(PlayerBodySlots slot)
+
+    public Mesh getMeshInSlot(PlayerBodySlots slot )
     {
         SkinnedMeshRenderer desiredSlot;
         getDesiredSlot(slot,out desiredSlot);
@@ -65,19 +65,9 @@ public class PlayerShopSlots : MonoBehaviour
         }
     }
 
-    private void insertInSlot(Mesh mesh, SkinnedMeshRenderer slot)
+    private void insertInSlot(Mesh mesh, SkinnedMeshRenderer meshSlot)
     {
-        if (slot.sharedMesh == mesh)
-        {
-            slot.sharedMesh = new Mesh();
-            return;
-        }
-        setGameObjectInSlot(mesh, slot);
-    }
-
-    private void setGameObjectInSlot(Mesh item, SkinnedMeshRenderer parent)
-    {
-        parent.sharedMesh = item;
+        meshSlot.sharedMesh = mesh;
     }
 
 

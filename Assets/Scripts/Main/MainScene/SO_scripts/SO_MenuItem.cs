@@ -6,6 +6,6 @@ public class SO_MenuItem : ScriptableObject
 {
     public Image itemImage;
     public string itemName;
-    public Mesh item;
+    public Mesh itemMesh;
     public PlayerBodySlots playerSlot;
 }

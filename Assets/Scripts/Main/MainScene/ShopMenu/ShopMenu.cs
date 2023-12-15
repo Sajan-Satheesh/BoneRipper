@@ -8,7 +8,7 @@ public class ShopMenu : MonoBehaviour
     [SerializeField] Transform playerPos;
     [SerializeField] public Transform player;
     [SerializeField] Transform menuContents;
-    [SerializeField] public SO_AllMenuItem menuItemList;
+    [SerializeField] public SO_MenuItemCollection menuItemList;
     [SerializeField] ShopItem shopItemPrefab;
     private int rotationDirection = 1;
     [SerializeField,Range(0,1)] float minRotationSpeed;
