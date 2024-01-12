@@ -1,6 +1,6 @@
 # ☠️ BoneRipper
 
-<a><img src="ReadMe Support/vlcsnap-2024-01-12-18h09m05s503.png" style="width:50%;"></a>
+<a><img src="ReadMe Support/vlcsnap-2024-01-12-18h09m05s503.png" style="width:100%;"></a>
 
 ## 🎲 About Game
 <a><img src="ReadMe Support/vlcsnap-2024-01-12-18h10m31s445.png" style="width:49%;"> <img src="ReadMe Support/vlcsnap-2024-01-12-18h10m50s896.png" style="width:49%;"></a>
