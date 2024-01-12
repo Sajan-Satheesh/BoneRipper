@@ -34,8 +34,9 @@ In this game, the player plays as a bone-ripper who rips enemies and collects th
 6. Created a shader graph(node-based) for the procedurally generated island, so that a blend of rock and grass textures can be applied.
 7. Used Observer pattern to implement less coupled events.
 8. Implemented many of the objects that have a lot of logic using the Model-View-Controller pattern.
-<a><img src="ReadMe Support/vlcsnap-2024-01-12-18h12m51s434.png" style="width:49%;"> <img src="ReadMe Support/vlcsnap-2024-01-12-18h11m00s454.png" style="width:49%;"></a>
 </br></br>
+<a><img src="ReadMe Support/vlcsnap-2024-01-12-18h12m51s434.png" style="width:49%;"> <img src="ReadMe Support/vlcsnap-2024-01-12-18h11m00s454.png" style="width:49%;"></a>
+</br>
 
 ## ⚙️ Notable Game-Editor Functionalities
 
