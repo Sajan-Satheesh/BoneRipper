@@ -29,14 +29,18 @@ In this game, the player plays as a bone-ripper who rips enemies and collects th
 7. Used Observer pattern to implement less coupled events.
 8. Implemented many of the objects that have a lot of logic using the Model-View-Controller pattern.
 
-## Game-Editor Functionalities
+## Notable Game-Editor Functionalities
 
-> World Service
+> **World Service**
 >> 1. Minimum and Maximum radius for the island can be set.
 >> 2. Segment count can be altered to create wavy edges for the island.
 >> 3. The default number of hideouts on the island can be set.
 
->Enemy Service
+> **Enemy Service**
 >> 1. The default count of enemies can be set.
 >> 2. The interval time for enemy spawn can be set.
->> 3. Number of tower enemies who can shoot simultaneously can be altered.
+>> 3. The number of tower enemies who can shoot simultaneously can be altered.
+
+> **Boat Service**
+>> 1. The Distance range for the spawning island can be set as required.
+>> 2. The distance range to toggle the jump path can be altered.
