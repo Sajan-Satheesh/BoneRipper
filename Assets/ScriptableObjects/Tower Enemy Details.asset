@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aafc183da1e05fd41abfb3243f18bc5c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8465665da2a6d604f8dee0bbabbb65ae, type: 3}
   m_Name: Tower Enemy Details
   m_EditorClassIdentifier: 
-  enemyView: {fileID: 5260606364181864456, guid: cfa21e4b8c047124cb5c09adab86aa8e,
+  enemyView: {fileID: 2888181517465623179, guid: 349d14a4b773e0547a5c30dd4a18381d,
     type: 3}
   enemyHealth: 100
   defaultWeapon: 0
-  defaultState: 2
+  defaultState: 1

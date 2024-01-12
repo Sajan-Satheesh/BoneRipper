@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f773af05edac1404b94dbf686a8e6f75, type: 3}
   m_Name: F_SunGlasses
   m_EditorClassIdentifier: 
-  itemImage: {fileID: 7922685415356474901, guid: 9d917eb47d11c264885d6c1fcc9d6f69,
-    type: 3}
+  itemImage: {fileID: 2800000, guid: 84cea9df231aa934187c35e0b6e54b4a, type: 3}
   itemName: Round Sun glasses
   itemMesh: {fileID: 1422774304998381282, guid: 8e566853c32d61b44a5619a1108cc19b,
     type: 3}

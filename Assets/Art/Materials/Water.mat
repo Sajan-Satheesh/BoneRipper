@@ -64,6 +64,6 @@ Material:
     - _wave_speed: 0.18
     m_Colors:
     - _DeepWater: {r: 0.82452834, g: 0.9519762, b: 1, a: 0}
-    - _WaterColor: {r: 0.09266641, g: 0.24961154, b: 0.3584906, a: 0}
+    - _WaterColor: {r: 0.03551085, g: 0.36861828, b: 0.3962264, a: 0}
     - _texture_scale: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
