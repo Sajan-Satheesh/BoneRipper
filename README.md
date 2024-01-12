@@ -1,6 +1,6 @@
-# BoneRipper
+# ☠️ BoneRipper
 
-## About Game
+## 🎲 About Game
 In this game, the player plays as a bone-ripper who rips enemies and collects the bones.
 1. At the start of the game, the player is spawned in a raft moving through the ocean. Once he reaches the nearest proximity to the enemy island, he has to jump to the island, and the level starts.
 2. In each level, the player has to move toward enemies, hit them, and kill them.
@@ -9,17 +9,17 @@ In this game, the player plays as a bone-ripper who rips enemies and collects th
 5. The player has to find and move towards the final destination to pass the current level.
 6. The bone collected during the rampage is counted towards the high score.
 
-## Controls
+## 🎹 Controls
 > 🖱**Left mouse click** -> Player to jump from the raft.<br>
 > ↗ **cursor**           -> decides the direction for the player to move.
 
- ## Features
+ ## 💡 Features
  1. Player can customize their character using the in-game shop system, which will remain saved and can be reset.
  2. Can create a higher record than their previous one,  and also have a reset functionality for high-score.
  3. Easy controls to navigate and play the game.
  4. Shootable enemies can predict the player's movement and shoot ( **! Beware**)
 
-## Implementations
+## 🧩 Implementations
 1. Created a generic abstract pooling system, which is used to main multiple pools for bones, weapons, arrows, jump path trailing.
 2. Implemented scriptable objects to create data sets for shop items, the player, enemies, and the boat.
 3. Used singleton pattern to run different services like GameServices, PlayerServices, EnemyServices, WeaponServices etc.
@@ -29,7 +29,7 @@ In this game, the player plays as a bone-ripper who rips enemies and collects th
 7. Used Observer pattern to implement less coupled events.
 8. Implemented many of the objects that have a lot of logic using the Model-View-Controller pattern.
 
-## Notable Game-Editor Functionalities
+## ⚙️ Notable Game-Editor Functionalities
 
 > **World Service**
 >> 1. Minimum and Maximum radius for the island can be set.
